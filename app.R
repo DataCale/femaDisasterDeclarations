@@ -17,13 +17,30 @@ data$lat <- as.numeric(data$lat)
 # define UI for FEMA disaster declarations app
 ui <- fluidPage(
   
+  # attach css style sheet
+  includeCSS("styles.css"),
+  
   # display map
   leafletOutput("map"),
   
   # create absolute side panel
   absolutePanel(
-    titlePanel("FEMA Disaster Declarations"))
-  )
+    id="sidebar",
+    titlePanel(h2("FEMA Disaster Declarations")),
+    fixed = TRUE,
+    draggable = FALSE,
+    top = 30,
+    left = 'auto',
+    right = 20,
+  
+  # year range input
+  sliderInput(inputId = "range", label = "Year Range:", 
+              min=min(data$fyDeclared),
+              max=max(data$fyDeclared),
+              value=c(min(data$fyDeclared),max(data$fyDeclared)),
+              format="####",
+              sep = "")
+  ))
 
 # define server logic to support app
 server <- function(input, output, session) {
