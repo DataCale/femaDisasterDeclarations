@@ -62,13 +62,18 @@ server <- function(input, output, session) {
       addCircleMarkers(data = data,
                        lng = ~long,
                        lat = ~lat,
+                       color = ~data$color,
                        popup = ~paste("<b>Title:</b>", data$title, "<br>",
                                       "<b>Type:</b>", data$incidentType, "<br>",
                                       "<b>Area:</b>", data$declaredCountyArea,
                                       "<b>State:</b>", data$state, "<br>",
                                       "<b>Year:</b>", data$fyDeclared)) %>%
       # custom map theme
-      addProviderTiles("Thunderforest.Landscape")
+      addProviderTiles("Thunderforest.Landscape") %>%
+      addLegend("bottomright",
+                labels = unique(data$incidentType),
+                colors = unique(data$color),
+                opacity = .5)
     
   })
   
