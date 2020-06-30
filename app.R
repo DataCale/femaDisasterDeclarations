@@ -45,8 +45,17 @@ ui <- fluidPage(
 # define server logic to support app
 server <- function(input, output, session) {
   
+  # reacts to year range selected
+  filterReact <- reactive(
+    data %>%
+      filter(data$fyDeclared >= input$range[1] & data$fyDeclared <= input$range[2])
+  )
+  
   # render map
-  output$map <- renderLeaflet({ 
+  output$map <- renderLeaflet({
+    
+    # updates data to match year range
+    data <- filterReact()
     
     leaflet() %>%
       addTiles() %>%
