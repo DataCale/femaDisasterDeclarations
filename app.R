@@ -7,6 +7,9 @@ library(readxl)
 # read in small subset of fema data
 data <- read_excel("data/sampleDDS.xlsx")
 
+# make year a numeric
+data$fyDeclared <- as.numeric(data$fyDeclared)
+
 # set long and lat as numerics
 data$long <- as.numeric(data$long)
 data$lat <- as.numeric(data$lat)
