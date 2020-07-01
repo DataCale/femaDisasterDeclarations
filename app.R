@@ -3,12 +3,10 @@ library(leaflet)
 library(sp)
 library(tidyverse)
 library(readxl)
+library(sf)
 
 # read in small subset of fema data
-data <- read_excel("data/sampleDDS.xlsx")
-
-# make year a numeric
-data$fyDeclared <- as.numeric(data$fyDeclared)
+data <- read_excel("data/DDS2.xlsx")
 
 # set long and lat as numerics
 data$long <- as.numeric(data$long)
@@ -26,7 +24,7 @@ ui <- fluidPage(
   # create absolute side panel
   absolutePanel(
     id="sidebar",
-    titlePanel(h2("FEMA Disaster Declarations")),
+    titlePanel(h3("FEMA Disaster Declarations")),
     fixed = TRUE,
     draggable = FALSE,
     top = 30,
@@ -34,22 +32,24 @@ ui <- fluidPage(
     right = 20,
   
   # year range input
-  sliderInput(inputId = "range", label = "Year Range:", 
-              min=min(data$fyDeclared),
-              max=max(data$fyDeclared),
-              value=c(min(data$fyDeclared),max(data$fyDeclared)),
+  sliderInput("range", label = "Year Range:", 
+              min=min(data$year),
+              max=max(data$year),
+              value=c(min(data$year),max(data$year)),
               format="####",
               sep = "")
+  
   ))
 
 # define server logic to support app
 server <- function(input, output, session) {
   
-  # reacts to year range selected
   filterReact <- reactive(
+    
+    # reacts to year range selected
     data %>%
-      filter(data$fyDeclared >= input$range[1] & data$fyDeclared <= input$range[2])
-  )
+      filter(data$year >= input$range[1] & data$year <= input$range[2])
+    )
   
   # render map
   output$map <- renderLeaflet({
@@ -60,18 +60,18 @@ server <- function(input, output, session) {
     leaflet() %>%
       addTiles() %>%
       addCircleMarkers(data = data,
+                       clusterOptions = markerClusterOptions(),
                        lng = ~long,
                        lat = ~lat,
                        color = ~data$color,
                        popup = ~paste("<b>Title:</b>", data$title, "<br>",
-                                      "<b>Type:</b>", data$incidentType, "<br>",
-                                      "<b>Area:</b>", data$declaredCountyArea,
-                                      "<b>State:</b>", data$state, "<br>",
-                                      "<b>Year:</b>", data$fyDeclared)) %>%
+                                      "<b>Type:</b>", data$type, "<br>",
+                                      "<b>Area:</b>", data$area, ", ", data$state, "<br>",
+                                      "<b>Year:</b>", data$year)) %>%
       # custom map theme
       addProviderTiles("Thunderforest.Landscape") %>%
       addLegend("bottomright",
-                labels = unique(data$incidentType),
+                labels = unique(data$type),
                 colors = unique(data$color),
                 opacity = .5)
     
