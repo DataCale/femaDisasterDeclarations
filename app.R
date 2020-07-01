@@ -66,7 +66,8 @@ server <- function(input, output, session) {
                        color = ~data$color,
                        popup = ~paste("<b>Title:</b>", data$title, "<br>",
                                       "<b>Type:</b>", data$type, "<br>",
-                                      "<b>Area:</b>", data$area, ", ", data$state, "<br>",
+                                      "<b>Area:</b>", data$area, "<br>",
+                                      "<b>State:</b>", data$state, "<br>",
                                       "<b>Year:</b>", data$year)) %>%
       # custom map theme
       addProviderTiles("Thunderforest.Landscape") %>%
