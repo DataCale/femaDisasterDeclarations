@@ -75,7 +75,6 @@ server <- function(input, output, session) {
                 labels = unique(data$type),
                 colors = unique(data$color),
                 opacity = .5)
-  
     })
 }
 
