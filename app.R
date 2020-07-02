@@ -24,7 +24,7 @@ ui <- fluidPage(
   # create absolute side panel
   absolutePanel(
     id="sidebar",
-    titlePanel(h3("FEMA Disaster Declarations")),
+    h3(titlePanel("FEMA Disaster Declarations")),
     fixed = TRUE,
     draggable = FALSE,
     top = 30,
